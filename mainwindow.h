@@ -25,6 +25,7 @@ private slots:
 
 private:
 	void closeEvent(QCloseEvent *event);
+	void moveToCenter();
 
 private:
 	Ui::MainWindow *ui;
