@@ -1,5 +1,4 @@
-#ifndef MESSAGEITEM_H
-#define MESSAGEITEM_H
+#pragma once
 
 #include <QWidget>
 #include <QDate>
@@ -31,5 +30,3 @@ private:
 private:
 	Ui::MessageItem *ui;
 };
-
-#endif // MESSAGEITEM_H

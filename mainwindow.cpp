@@ -13,11 +13,34 @@
 
 #include <QCloseEvent>
 
-#include <QDebug>
 #include <QDesktopWidget>
 
 namespace {
-	const int ONE_MINUTE = 1000 * 2;
+	const int ONE_MINUTE = 1000 * 60;
+}
+
+namespace {
+	const QString SETTING_ID     = "id";
+	const QString SETTING_SERVER = "server";
+
+	QVariant GetSetting(QString name)
+	{
+		QVariant res;
+		QFile setting(name);
+		if (setting.open(QIODevice::ReadOnly))
+			res = QVariant(setting.readAll());
+
+		qDebug() << "GetSetting" << res;
+		return res;
+	}
+
+	template<typename T>
+	void SetSetting(QString name, T val)
+	{
+		QFile setting(name);
+		if (setting.open(QIODevice::WriteOnly))
+			setting.write(QVariant(val).toString().toLatin1());
+	}
 }
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -66,11 +89,18 @@ MainWindow::MainWindow(QWidget *parent) :
 					this->close();
 				});
 
-				id = msg.id;
+				id = qMax(id, msg.id);
 			}
+			SetSetting(SETTING_ID, QString::number(id));
+			m_id = id;
 			show();
 			moveToCenter();
 		}
+		else
+		{
+			start();
+		}
+
 		reply->deleteLater();
 	});
 }
@@ -87,7 +117,12 @@ void MainWindow::start()
 
 void MainWindow::checkNotice()
 {
-	m_manager.get(QNetworkRequest(QUrl("http://feod.noip.me/pull")));
+	if(m_server.isEmpty() || !QUrl(m_server).isValid())
+		m_server = GetSetting(SETTING_SERVER).toString();
+
+	m_id = m_id ? m_id : GetSetting(SETTING_ID).toInt();
+
+	m_manager.get(QNetworkRequest(QUrl(m_server + QString::number(m_id))));
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -110,5 +145,5 @@ void MainWindow::moveToCenter()
 	QApplication::processEvents(QEventLoop::AllEvents);
 
 	setGeometry(QStyle::alignedRect(Qt::LeftToRight, Qt::AlignCenter,
-				size(), QApplication::desktop()->availableGeometry()));
+									size(), QApplication::desktop()->availableGeometry()));
 }

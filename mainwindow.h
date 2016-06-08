@@ -1,5 +1,4 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#pragma once
 
 #include <QMainWindow>
 
@@ -31,6 +30,6 @@ private:
 	Ui::MainWindow *ui;
 	QTimer m_timer;
 	QNetworkAccessManager m_manager;
+	QString m_server  = QString();
+	unsigned int m_id = 0;
 };
-
-#endif // MAINWINDOW_H
