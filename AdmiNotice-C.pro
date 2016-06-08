@@ -23,3 +23,6 @@ HEADERS  += mainwindow.h \
 
 FORMS    += mainwindow.ui \
     MessageItem.ui
+
+RESOURCES += \
+    src.qrc

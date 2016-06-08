@@ -51,10 +51,12 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->setupUi(this);
 
 	setWindowFlags(windowFlags() & ~Qt::WindowMinimizeButtonHint & ~Qt::WindowMaximizeButtonHint & ~Qt::WindowCloseButtonHint);
-	setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint | Qt::SplashScreen);
+	setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
 #ifndef Q_OS_WIN
 	setWindowFlags(windowFlags() | Qt::X11BypassWindowManagerHint);
 #endif
+
+	setWindowIcon(QIcon(":/icon.png"));
 
 	m_timer.setSingleShot(true);
 	m_timer.setInterval(ONE_MINUTE);
@@ -95,6 +97,8 @@ MainWindow::MainWindow(QWidget *parent) :
 			m_id = id;
 			show();
 			moveToCenter();
+			raise();
+			activateWindow();
 		}
 		else
 		{
@@ -112,6 +116,14 @@ MainWindow::~MainWindow()
 
 void MainWindow::start()
 {
+	static bool first = true;
+	if(first)
+	{
+		first = false;
+		checkNotice();
+		return;
+	}
+
 	m_timer.start();
 }
 
@@ -120,7 +132,12 @@ void MainWindow::checkNotice()
 	if(m_server.isEmpty() || !QUrl(m_server).isValid())
 		m_server = GetSetting(SETTING_SERVER).toString();
 
-	m_id = m_id ? m_id : GetSetting(SETTING_ID).toInt();
+	if(m_id == 0)
+	{
+		QVariant res = GetSetting(SETTING_ID);
+		m_id = res.isValid() ? res.toInt() : m_id;
+	}
+
 
 	m_manager.get(QNetworkRequest(QUrl(m_server + QString::number(m_id))));
 }
