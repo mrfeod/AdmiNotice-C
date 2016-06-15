@@ -9,7 +9,7 @@ MessageItem::MessageItem(const Message& msg, QWidget *parent) :
 {
 	ui->setupUi(this);
 
-	ui->headerBrowser->setText(msg.date.toString() + " #" + QString::number(msg.id));
+	ui->headerBrowser->setText(msg.date.toString("dd.MM.yyyy, dddd, HH:mm") + " #" + QString::number(msg.id));
 	ui->messageBrowser->setText(msg.msg);
 	connect(ui->closeButton, &QPushButton::clicked, this, &QWidget::close);
 }

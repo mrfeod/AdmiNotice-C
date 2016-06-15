@@ -1,11 +1,11 @@
 #pragma once
 
 #include <QWidget>
-#include <QDate>
+#include <QDateTime>
 
 struct Message {
 	QString msg;
-	QDate date;
+	QDateTime date;
 	unsigned int id = 0;
 };
 

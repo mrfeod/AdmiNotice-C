@@ -78,7 +78,7 @@ MainWindow::MainWindow(QWidget *parent) :
 				Message msg;
 				msg.id   = obj.value("_id").toInt();
 				msg.msg  = obj.value("message").toString();
-				msg.date = QDate::fromString(obj.value("date").toString(), Qt::ISODate);
+				msg.date = QDateTime::fromString(obj.value("date").toString(), Qt::ISODate);
 
 				auto* msgItem = new MessageItem(msg, this);
 				ui->centralWidget->layout()->addWidget(msgItem);
