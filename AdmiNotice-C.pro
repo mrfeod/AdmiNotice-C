@@ -16,10 +16,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    MessageItem.cpp
+    MessageItem.cpp \
+    RunGuard.cpp
 
 HEADERS  += mainwindow.h \
-    MessageItem.h
+    MessageItem.h \
+    RunGuard.h
 
 FORMS    += mainwindow.ui \
     MessageItem.ui
